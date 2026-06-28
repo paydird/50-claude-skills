@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>50 Claude Skills — The Arsenal</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #07070a;
+    --panel: #0e0e14;
+    --panel-2: #14141d;
+    --border: #1f1f2b;
+    --border-bright: #2e2e40;
+    --text: #e8e8f0;
+    --text-dim: #8a8a9c;
+    --text-faint: #5a5a6c;
+    --gold: #f0b429;
+    --purple: #8b5cf6;
+    --green: #22c55e;
+    --cyan: #2dd4bf;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: var(--gold); color: #000; }
+
+  /* Ambient background */
+  .ambient {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(139,92,246,0.12), transparent),
+      radial-gradient(ellipse 60% 40% at 90% 110%, rgba(240,180,41,0.06), transparent);
+    pointer-events: none;
+  }
+
+  .wrap { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---- HERO ---- */
+  .hero { padding: 100px 0 60px; text-align: center; }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 28px;
+  }
+
+  .hero h1 {
+    font-size: clamp(42px, 8vw, 88px);
+    font-weight: 700;
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+    margin-bottom: 28px;
+  }
+  .hero h1 .dim { color: var(--text-faint); }
+  .hero h1 .glow {
+    background: linear-gradient(120deg, var(--gold), #ffd76b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .hero-sub {
+    font-size: clamp(17px, 2.5vw, 22px);
+    color: var(--text-dim);
+    max-width: 620px;
+    margin: 0 auto 18px;
+  }
+  .hero-sub strong { color: var(--text); font-weight: 500; }
+
+  .hero-line {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--text-faint);
+    margin-bottom: 40px;
+  }
+
+  .share-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 13px 24px;
+    border-radius: 10px;
+    border: 1px solid var(--border-bright);
+    background: var(--panel-2);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.18s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .btn:hover { border-color: var(--gold); transform: translateY(-1px); }
+  .btn.primary { background: var(--gold); color: #000; border-color: var(--gold); font-weight: 700; }
+  .btn.primary:hover { background: #ffd054; }
+
+  /* ---- STATS BAR ---- */
+  .stats {
+    display: flex; justify-content: center; gap: 48px; flex-wrap: wrap;
+    padding: 36px 0; margin-top: 50px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .stat { text-align: center; }
+  .stat .n {
+    font-size: 34px; font-weight: 700; line-height: 1;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--gold);
+  }
+  .stat .l {
+    font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-faint); margin-top: 8px;
+  }
+
+  /* ---- CONTROLS ---- */
+  .controls { padding: 44px 0 28px; position: sticky; top: 0; z-index: 10; background: linear-gradient(180deg, var(--bg) 70%, transparent); }
+  .search {
+    width: 100%;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px;
+    padding: 15px 18px;
+    border-radius: 12px;
+    border: 1px solid var(--border-bright);
+    background: var(--panel);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.18s;
+  }
+  .search:focus { border-color: var(--gold); }
+  .search::placeholder { color: var(--text-faint); }
+
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+  .chip {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 7px 14px;
+    border-radius: 99px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .chip:hover { border-color: var(--border-bright); color: var(--text); }
+  .chip.active { background: var(--text); color: #000; border-color: var(--text); font-weight: 700; }
+
+  /* ---- CATEGORY SECTIONS ---- */
+  .cat-block { margin-bottom: 56px; }
+  .cat-head {
+    display: flex; align-items: baseline; gap: 14px;
+    padding-bottom: 16px; margin-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .cat-head .icon { font-size: 22px; }
+  .cat-head h2 {
+    font-size: 20px; font-weight: 700; letter-spacing: 0.02em; text-transform: uppercase;
+  }
+  .cat-head .count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; color: var(--text-faint); margin-left: auto;
+  }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 14px; }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    transition: all 0.18s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: var(--accent, var(--purple));
+    opacity: 0; transition: opacity 0.18s;
+  }
+  .card:hover { border-color: var(--border-bright); transform: translateY(-2px); background: var(--panel-2); }
+  .card:hover::before { opacity: 1; }
+
+  .card-top { display: flex; align-items: center; gap: 11px; margin-bottom: 12px; }
+  .card-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; font-weight: 500;
+    color: #000;
+    background: var(--accent, var(--purple));
+    min-width: 26px; height: 26px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 7px;
+  }
+  .card-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px; font-weight: 500; color: var(--text);
+  }
+  .card-does { font-size: 13.5px; color: var(--text-dim); margin-bottom: 12px; }
+  .card-use {
+    font-size: 12.5px; color: var(--text-faint);
+    padding-top: 11px; border-top: 1px solid var(--border);
+    display: flex; gap: 7px;
+  }
+  .card-use .arrow { color: var(--accent, var(--purple)); flex-shrink: 0; }
+  .card-link {
+    display: inline-block; margin-top: 11px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+    color: var(--accent, var(--purple)); text-decoration: none;
+    word-break: break-all; opacity: 0.8;
+  }
+  .card-link:hover { opacity: 1; text-decoration: underline; }
+
+  .no-results { text-align: center; padding: 60px 0; color: var(--text-faint); font-size: 16px; display: none; }
+
+  /* ---- CLOSING ---- */
+  .closing {
+    margin: 40px 0 80px;
+    padding: 44px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: linear-gradient(160deg, var(--panel), var(--bg));
+    text-align: center;
+  }
+  .closing h3 { font-size: 26px; font-weight: 700; margin-bottom: 18px; letter-spacing: -0.01em; }
+  .closing p { color: var(--text-dim); font-size: 16px; max-width: 560px; margin: 0 auto 14px; }
+  .closing .punch { color: var(--gold); font-weight: 500; }
+  .closing .note {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: var(--text-faint); margin-top: 24px;
+  }
+
+  /* ---- TOAST ---- */
+  .toast {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: var(--gold); color: #000; font-weight: 700;
+    padding: 13px 26px; border-radius: 11px; font-size: 14px;
+    opacity: 0; transition: all 0.3s cubic-bezier(0.2,0.8,0.2,1); z-index: 100;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+  @media (max-width: 640px) {
+    .hero { padding: 70px 0 40px; }
+    .stats { gap: 30px; }
+    .grid { grid-template-columns: 1fr; }
+    .closing { padding: 30px 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="ambient"></div>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="kicker">The Free Arsenal · 2026</div>
+    <h1>While you pay <span class="dim">$1,000/mo</span><br>someone runs <span class="glow">all 50</span><br>for free.</h1>
+    <p class="hero-sub">Most people use Claude like a chatbot. A few turn it into a full <strong>development, design and marketing department</strong> — with these 50 skills.</p>
+    <p class="hero-line">all free · all on github · most people just never looked</p>
+    <div class="share-row">
+      <button class="btn primary" onclick="copyLink()">⧉ Copy link to share</button>
+      <button class="btn" onclick="document.getElementById('search').scrollIntoView();document.getElementById('search').focus()">⌕ Search the 50</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="n">50</div><div class="l">Skills</div></div>
+      <div class="stat"><div class="n">8</div><div class="l">Categories</div></div>
+      <div class="stat"><div class="n">$0</div><div class="l">Cost</div></div>
+      <div class="stat"><div class="n">3-4×</div><div class="l">Faster output</div></div>
+    </div>
+  </header>
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <input type="text" class="search" id="search" placeholder="Search skills — try 'pdf', 'design', 'security'...">
+    <div class="filters" id="filters"></div>
+  </div>
+
+  <!-- SKILLS -->
+  <main id="skillsRoot"></main>
+  <div class="no-results" id="noResults">No skills match that search.</div>
+
+  <!-- CLOSING -->
+  <section class="closing">
+    <h3>A tool only amplifies the skill you already have.</h3>
+    <p>Someone who understands writing gets more from the writing skills. Someone who understands code gets more from the dev skills.</p>
+    <p class="punch">The skills don't replace your judgment. They multiply it.</p>
+    <p>The people who win won't be the ones who installed the most. They'll be the ones who mastered a fundamental — then pointed these tools at it.</p>
+    <div class="note">skills require Claude Pro, Max, Team or Enterprise with code execution enabled</div>
+  </section>
+
+</div>
+
+<div class="toast" id="toast">Link copied ✓</div>
+
+<script>
+const ACCENTS = {
+  docs: '#2dd4bf', design: '#8b5cf6', dev: '#f0b429', security: '#ef4444',
+  agents: '#22c55e', content: '#ec4899', productivity: '#3b82f6', specialized: '#a78bfa'
+};
+
+const CATEGORIES = [
+  { id: 'docs', icon: '📄', name: 'Documents & Office' },
+  { id: 'design', icon: '🎨', name: 'Design & Creative' },
+  { id: 'dev', icon: '⚙️', name: 'Development & Code' },
+  { id: 'security', icon: '🔒', name: 'Security & Privacy' },
+  { id: 'agents', icon: '🤖', name: 'Agents & Automation' },
+  { id: 'content', icon: '✍️', name: 'Content & Writing' },
+  { id: 'productivity', icon: '📁', name: 'Productivity' },
+  { id: 'specialized', icon: '🧬', name: 'Specialized' },
+];
+
+const SKILLS = [
+  {n:1,cat:'docs',name:'docx',does:'Create and edit Word docs with real formatting, tracked changes and comments.',use:'A freelancer delivering a finished 20-page client report in minutes.',link:'github.com/anthropics/skills/tree/main/skills/docx'},
+  {n:2,cat:'docs',name:'pdf',does:'Extract text, tables and metadata from PDFs, merge and annotate them.',use:'Pulling every figure from a stack of financial PDFs into one summary.',link:'github.com/anthropics/skills/tree/main/skills/pdf'},
+  {n:3,cat:'docs',name:'pptx',does:'Build full slide decks — layouts, templates, notes — from a prompt.',use:'A rough idea into a 15-slide investor pitch in one pass.',link:'github.com/anthropics/skills/tree/main/skills/pptx'},
+  {n:4,cat:'docs',name:'xlsx',does:'Spreadsheets with working formulas, charts and data transformations.',use:'Cleaning a messy 5,000-row CSV into a formatted report with charts.',link:'github.com/anthropics/skills/tree/main/skills/xlsx'},
+  {n:5,cat:'docs',name:'revealjs-skill',does:'Web-based presentations using the Reveal.js framework.',use:'A conference talk you share as a link, not a static file.'},
+  {n:6,cat:'docs',name:'polaris-datainsight-doc-extract',does:'Pulls structured data out of DOCX, PPTX, XLSX, HWP files via API.',use:'Extracting tables from hundreds of reports into a database.'},
+
+  {n:7,cat:'design',name:'frontend-design',does:'Forces a real aesthetic (Brutalism, Minimalism) before coding — no "AI slop".',use:'A client site that looks studio-made, not like a template.',link:'github.com/anthropics/skills/tree/main/skills/frontend-design'},
+  {n:8,cat:'design',name:'algorithmic-art',does:'Interactive generative art via p5.js with live sliders and seeds.',use:'A series of one-of-a-kind generative pieces to sell.',link:'github.com/anthropics/skills/tree/main/skills/algorithmic-art'},
+  {n:9,cat:'design',name:'canvas-design',does:'Posters, covers and visuals in PNG/PDF with a design philosophy first.',use:'A full set of branded social graphics from one prompt.',link:'github.com/anthropics/skills/tree/main/skills/canvas-design'},
+  {n:10,cat:'design',name:'theme-factory',does:'10 ready pro themes (colors + fonts) applied to any artifact, one command.',use:'Rebranding an entire deck to a client\'s colors in seconds.',link:'github.com/anthropics/skills/tree/main/skills/theme-factory'},
+  {n:11,cat:'design',name:'web-artifacts-builder',does:'Scaffolds React + TypeScript + Tailwind + shadcn/ui into one HTML file.',use:'A working interactive tool you can hand to a client or ship.',link:'github.com/anthropics/skills/tree/main/skills/web-artifacts-builder'},
+  {n:12,cat:'design',name:'creative-director-skill',does:'AI creative director — ideation, concept scoring, storytelling frameworks.',use:'A full campaign concept before you write a line of copy.'},
+  {n:13,cat:'design',name:'naming',does:'Metaphor-driven naming for brands, SaaS, bots and products.',use:'30 strong startup names with reasoning, not random words.'},
+
+  {n:14,cat:'dev',name:'superpowers',does:'Full agentic coding framework — 20+ skills, autonomous for hours.',use:'Shipping a working feature while you\'re away from the keyboard.',link:'github.com/obra/superpowers'},
+  {n:15,cat:'dev',name:'brainstorming',does:'Turns rough ideas into full designs through structured questioning.',use:'From "I want an app that does X" to a clear spec.',link:'github.com/obra/superpowers/tree/main/skills/brainstorming'},
+  {n:16,cat:'dev',name:'test-driven-development',does:'Writes tests before implementation, every feature and bugfix.',use:'Shipping features you can actually trust in production.'},
+  {n:17,cat:'dev',name:'systematic-debugging',does:'4-phase bug hunt via Root Cause Analysis, not random guessing.',use:'Fixing a bug in 20 min that would\'ve taken half a day.'},
+  {n:18,cat:'dev',name:'software-architecture',does:'Clean Architecture, SOLID principles, design best practices.',use:'A foundation for an app that won\'t collapse at version 3.'},
+  {n:19,cat:'dev',name:'git-pushing',does:'Automates git operations and repository interactions.',use:'Clean commits and pushes without remembering every command.'},
+  {n:20,cat:'dev',name:'file-search (MassGen)',does:'Fast codebase search via ripgrep and ast-grep.',use:'Understanding a 100,000-line codebase in minutes, not days.',link:'github.com/massgen/massgen'},
+  {n:21,cat:'dev',name:'webapp-testing',does:'Interacts with and tests local web apps through Playwright.',use:'Testing a checkout flow end to end without clicking manually.',link:'github.com/anthropics/skills/tree/main/skills/webapp-testing'},
+  {n:22,cat:'dev',name:'context-optimization',does:'Context engineering — compaction, masking, KV-cache optimization.',use:'Keeping a long agent session sharp instead of degrading.'},
+  {n:23,cat:'dev',name:'pypict-claude-skill',does:'Test cases via Pairwise Combinatorial Testing.',use:'Covering a complex feature with the minimum effective test set.'},
+  {n:24,cat:'dev',name:'skill-creator',does:'Meta-skill that teaches Claude to build its own skills, with tests.',use:'Turning your personal process into a reusable skill.',link:'github.com/anthropics/skills/tree/main/skills/skill-creator'},
+  {n:25,cat:'dev',name:'skill-seekers',does:'Converts any documentation website into a Claude skill in minutes.',use:'Feeding a framework\'s entire docs into Claude so it codes perfectly.'},
+
+  {n:26,cat:'security',name:'varlock-claude-skill',does:'Keeps secrets out of sessions, terminals, logs and git commits.',use:'Never accidentally leaking a key into a public repo again.'},
+  {n:27,cat:'security',name:'sanitize',does:'Detects and redacts PII across 15 categories, all locally.',use:'Cleaning a dataset of personal info before sharing it.'},
+  {n:28,cat:'security',name:'ironclaw-agent-guard',does:'Security review for risky tool calls, prompt injection, secret redaction.',use:'Stopping an agent from executing something dangerous by mistake.'},
+  {n:29,cat:'security',name:'shellward-security-guide',does:'Blocks dangerous commands, adds DLP and PII scanning for agents.',use:'Preventing an accidental destructive command on a live server.'},
+  {n:30,cat:'security',name:'VibeSec-Skill',does:'Protects web apps you build with Claude from getting hacked.',use:'A security pass on your code before it goes live.'},
+
+  {n:31,cat:'agents',name:'Septim Agents Pack',does:'10 named sub-agents covering planning, brand, marketing, finance, legal, research.',use:'Handing a project to a team of AI specialists, not one generalist.'},
+  {n:32,cat:'agents',name:'agent-manager-skill',does:'Manage multiple CLI agents via tmux with cron scheduling. No server.',use:'Agents that wake up, do a task, and report back every morning.'},
+  {n:33,cat:'agents',name:'connect-apps (Composio)',does:'Real actions across 500+ apps — emails, issues, Slack posts.',use:'An agent that reads a request and books the meeting itself.',link:'dashboard.composio.dev'},
+  {n:34,cat:'agents',name:'internal-comms',does:'Status reports, leadership updates, newsletters, incident reports.',use:'A weekly team update drafted in seconds from your notes.',link:'github.com/anthropics/skills/tree/main/skills/internal-comms'},
+
+  {n:35,cat:'content',name:'avoid-ai-writing',does:'Removes 21 categories of AI writing patterns with a 43-entry table.',use:'Content that doesn\'t get flagged or feel generic.'},
+  {n:36,cat:'content',name:'content-research-writer',does:'Researches a topic and writes the content end to end.',use:'A researched 1,500-word article from a single topic line.'},
+  {n:37,cat:'content',name:'md2wechat',does:'Converts Markdown into WeChat drafts with preview and images.',use:'Turning a blog post into a ready WeChat article.'},
+  {n:38,cat:'content',name:'tapestry',does:'Interlinks and summarizes documents into knowledge networks.',use:'Connecting a year of meeting notes into a searchable map.'},
+  {n:39,cat:'content',name:'karpathy-llm-wiki',does:'Builds a personal LLM wiki from raw sources.',use:'A private wiki that grows smarter as you feed it.'},
+  {n:40,cat:'content',name:'buyer-eval',does:'Evaluates B2B vendors by interrogating claims and scoring criteria.',use:'Choosing between 5 tools objectively instead of by hype.'},
+
+  {n:41,cat:'productivity',name:'file-organizer',does:'Intelligently organizes files and folders across your computer.',use:'Cleaning years of digital clutter in one pass.'},
+  {n:42,cat:'productivity',name:'invoice-organizer',does:'Auto-organizes invoices and receipts for tax prep.',use:'Sorting a year of receipts into clean categories automatically.'},
+  {n:43,cat:'productivity',name:'knowledge-work-plugins',does:'11 official plugins connecting Slack, Notion, Asana, Linear, Jira.',use:'An agent that reads your Linear tickets and drafts updates.',link:'github.com/anthropics/knowledge-work-plugins'},
+
+  {n:44,cat:'specialized',name:'claude-ally-health',does:'Analyzes medical reports, tracks health metrics, wellness steps.',use:'Making sense of bloodwork your doctor explained in 30 seconds.'},
+  {n:45,cat:'specialized',name:'dna-claude-analysis',does:'Processes raw DNA from 23andMe/AncestryDNA across 17 categories.',use:'A detailed personal genetics dashboard from your raw file.'},
+  {n:46,cat:'specialized',name:'Satori',does:'A thinking companion blending IFS, DBT, Stoicism and Buddhism.',use:'A structured thinking partner when stuck on something heavy.'},
+  {n:47,cat:'specialized',name:'claude-family-history-research',does:'Plans genealogy and family history projects.',use:'A structured plan to trace your roots instead of guessing.'},
+  {n:48,cat:'specialized',name:'bitwize-music-studio',does:'AI music skills for creation and production.',use:'Producing a track from an idea, no full studio needed.'},
+  {n:49,cat:'specialized',name:'reddit-fetch',does:'Fetches Reddit content when normal fetching is blocked.',use:'Pulling discussion data for market research.'},
+  {n:50,cat:'specialized',name:'ru-text',does:'Text quality with ~1,040 rules for typography and editorial writing.',use:'Turning rough text into clean, properly typeset writing.'},
+];
+
+let activeFilter = 'all';
+let searchTerm = '';
+
+// Build filter chips
+const filtersEl = document.getElementById('filters');
+const allChip = document.createElement('button');
+allChip.className = 'chip active';
+allChip.textContent = 'All 50';
+allChip.onclick = () => setFilter('all', allChip);
+filtersEl.appendChild(allChip);
+CATEGORIES.forEach(c => {
+  const chip = document.createElement('button');
+  chip.className = 'chip';
+  chip.textContent = c.icon + ' ' + c.name;
+  chip.onclick = () => setFilter(c.id, chip);
+  filtersEl.appendChild(chip);
+});
+
+function setFilter(id, el) {
+  activeFilter = id;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+document.getElementById('search').addEventListener('input', e => {
+  searchTerm = e.target.value.toLowerCase().trim();
+  render();
+});
+
+function render() {
+  const root = document.getElementById('skillsRoot');
+  root.innerHTML = '';
+  let totalShown = 0;
+
+  CATEGORIES.forEach(cat => {
+    if (activeFilter !== 'all' && activeFilter !== cat.id) return;
+
+    const items = SKILLS.filter(s => {
+      if (s.cat !== cat.id) return false;
+      if (!searchTerm) return true;
+      return (s.name + ' ' + s.does + ' ' + s.use).toLowerCase().includes(searchTerm);
+    });
+
+    if (items.length === 0) return;
+    totalShown += items.length;
+
+    const block = document.createElement('section');
+    block.className = 'cat-block';
+    block.innerHTML = `
+      <div class="cat-head">
+        <span class="icon">${cat.icon}</span>
+        <h2>${cat.name}</h2>
+        <span class="count">${items.length} skill${items.length>1?'s':''}</span>
+      </div>
+      <div class="grid">
+        ${items.map(s => `
+          <div class="card" style="--accent:${ACCENTS[cat.id]}">
+            <div class="card-top">
+              <span class="card-num">${s.n}</span>
+              <span class="card-name">${s.name}</span>
+            </div>
+            <div class="card-does">${s.does}</div>
+            <div class="card-use"><span class="arrow">→</span><span>${s.use}</span></div>
+            ${s.link ? `<a class="card-link" href="https://${s.link}" target="_blank" rel="noopener">${s.link}</a>` : ''}
+          </div>
+        `).join('')}
+      </div>
+    `;
+    root.appendChild(block);
+  });
+
+  document.getElementById('noResults').style.display = totalShown === 0 ? 'block' : 'none';
+}
+
+function copyLink() {
+  const url = window.location.href;
+  navigator.clipboard.writeText(url).then(showToast).catch(() => {
+    const t = document.createElement('textarea');
+    t.value = url; document.body.appendChild(t); t.select();
+    try { document.execCommand('copy'); showToast(); } catch(e){}
+    document.body.removeChild(t);
+  });
+}
+
+function showToast() {
+  const toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+render();
+</script>
+</body>
+</html>
